@@ -1,0 +1,16 @@
+version: "3.6"
+services:
+  spring-config-server:
+    image: spring-config-server:latest
+    container_name: spring-config-server
+    ports:
+      - 8888:8888
+    environment:
+      - SPRING_RABBITMQ_ADDRESSES=rabbitmq
+    restart: unless-stopped
+    networks:
+      - labs
+networks:
+  labs:
+    external:
+      name: labs
