@@ -1,0 +1,27 @@
+server:
+  port: 8888
+spring:
+  application:
+    name: spring-config-server
+  rabbitmq:
+    host: ${SPRING_RABBITMQ_HOST:localhost}
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/llsilvas/spring_config_repo
+          search-paths: /{application}
+          basedir: target/config-repo
+          default-label: main
+          clone-on-start: true
+          timeout: 2
+  devtools:
+    add-properties: true
+  jackson:
+    timezone: GMT-3
+
+# All traces should be sent to latency analysis tool
+\
+
+
+

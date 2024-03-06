@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <contextName>${project.name}</contextName>
+    <appender name="json-stdout" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.contrib.json.classic.JsonLayout">
+            <jsonFormatter class="ch.qos.logback.contrib.jackson.JacksonJsonFormatter">
+                <prettyPrint>true</prettyPrint>
+            </jsonFormatter>
+            <timestampFormat>yyyy-MM-dd' 'HH:mm:ss.SSS</timestampFormat>
+        </layout>
+    </appender>
+    <appender name="LOKI" class="com.github.loki4j.logback.Loki4jAppender">
+        <http class="com.github.loki4j.logback.ApacheHttpSender">
+            <url>http://${LOKI_HOST:-localhost}:${LOKI_PORT:-3100}/loki/api/v1/push</url>
+            <requestTimeoutMs>10000</requestTimeoutMs>
+        </http>
+        <format class="com.github.loki4j.logback.ProtobufEncoder">
+            <label>
+                <pattern>application=spring-config-server,host=${HOSTNAME},level=%level,class=%logger{0},method=%M,message=%msg</pattern>
+            </label>
+            <message class="com.github.loki4j.logback.JsonLayout">
+                <timestamp>
+                    <enabled>false</enabled>
+                </timestamp>
+                <loggerName>
+                    <targetLength>20</targetLength>
+                </loggerName>
+            </message>
+            <sortByTime>true</sortByTime>
+        </format>
+    </appender>
+    <root level="info">
+        <appender-ref ref="json-stdout" />
+        <appender-ref ref="LOKI"/>
+    </root>
+</configuration>
