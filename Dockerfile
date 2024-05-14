@@ -1,13 +1,17 @@
 FROM @from.image@ as builder
 # First stage : Extract the layers
 
-WORKDIR /@project.name@
+WORKDIR @project.name@
 
-ADD ./ /@project.name@
+COPY mvnw .
+COPY .mvn .mvn
+COPY pom.xml .
+COPY src src
+RUN chmod +x mvnw
+RUN ./mvnw package -DskipTests
 
-ARG JAR_FILE=*.jar
+ARG JAR_FILE=target/*.jar
 COPY ${JAR_FILE} app.jar
-
 RUN java -Djarmode=layertools -jar app.jar extract
 
 FROM @from.image@ as final
