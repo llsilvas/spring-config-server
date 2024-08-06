@@ -10,13 +10,13 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "*" ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "*" ]
 
 jobs:
-  build:
 
+  tests:
     runs-on: ubuntu-latest
 
     steps:
@@ -28,8 +28,17 @@ jobs:
         java-version: '21'
         distribution: 'temurin'
         cache: maven
-    - name: Build with Maven
-      run: mvn clean package
 
     - name: Test with Maven
-      run: mvn test
+      run: mvn clean test
+  
+  build:
+    needs: tests
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Build
+      run: mvn clean package
+
