@@ -55,5 +55,6 @@ jobs:
 
   docker:
     needs: build
+    uses: ./.github/workflows/build.yml
 
 
