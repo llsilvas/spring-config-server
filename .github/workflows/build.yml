@@ -53,3 +53,7 @@ jobs:
     - name: Build
       run: mvn clean package
 
+  docker:
+    needs: build
+
+
