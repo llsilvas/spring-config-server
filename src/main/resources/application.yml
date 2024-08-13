@@ -6,6 +6,8 @@ spring:
   rabbitmq:
     host: ${SPRING_RABBITMQ_HOST:localhost}
   cloud:
+#    refresh:
+#      enabled: false
     config:
       server:
         git:
@@ -28,6 +30,4 @@ management:
     web:
       exposure:
         include: '*'
-
-
 

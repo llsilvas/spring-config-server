@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.4</version>
+        <version>3.3.2</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>br.dev.leandro.spring</groupId>
@@ -15,7 +15,7 @@
     <description>spring-config-server</description>
     <properties>
         <java.version>21</java.version>
-        <spring-cloud.version>2023.0.0</spring-cloud.version>
+        <spring-cloud.version>2023.0.3</spring-cloud.version>
         <jkube.version>1.16.2</jkube.version>
         <docker.dockerfile.path>${project.basedir}/Dockerfile</docker.dockerfile.path>
     </properties>
@@ -100,7 +100,7 @@
         <dependency>
             <groupId>com.github.loki4j</groupId>
             <artifactId>loki-protobuf</artifactId>
-            <version>0.0.1_pb3.24.0</version>
+            <version>0.0.2_pb4.26.0</version>
         </dependency>
 
         <dependency>
@@ -192,7 +192,7 @@
                         <artifactId>kubernetes-maven-plugin</artifactId>
                         <version>${jkube.version}</version>
                         <configuration>
-                            <verbose>false</verbose>
+                            <verbose>true</verbose>
                             <images>
                                 <image>
                                     <alias>${project.artifactId}</alias>
@@ -237,5 +237,4 @@
             </build>
         </profile>
     </profiles>
-
 </project>

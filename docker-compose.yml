@@ -1,4 +1,4 @@
-version: "3.6"
+version: "4.0"
 services:
   spring-config-server:
     image: spring-config-server:latest

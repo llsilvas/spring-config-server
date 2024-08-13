@@ -1,6 +1,5 @@
-FROM @from.image@ as builder
+FROM eclipse-temurin:21 as builder
 # First stage : Extract the layers
-
 WORKDIR @project.name@
 
 COPY mvnw .
@@ -14,18 +13,30 @@ ARG JAR_FILE=target/*.jar
 COPY ${JAR_FILE} app.jar
 RUN java -Djarmode=layertools -jar app.jar extract
 
-FROM @from.image@ as final
+FROM eclipse-temurin:21-jammy as final
+
+# Cria o usuário e grupo spring
+RUN addgroup --system spring && adduser --system --ingroup spring spring
+
+# Instala tzdata para gerenciar timezones
+RUN apt-get update && apt-get install -y tzdata
+
+# Define o timezone desejado enquanto ainda é root
+RUN ln -snf /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime && echo "America/Sao_Paulo" > /etc/timezone
+
+# Cria o diretório de trabalho e atribui permissões ao usuário criado
+WORKDIR /@project.name@
+RUN chown -R spring:spring /@project.name@
+
+# Altera o usuário para o usuário não root
+USER spring:spring
 
 ## Second stage : Copy the extracted layers
-
-WORKDIR /@project.name@
-
-VOLUME /tmp
-
 COPY --from=builder @project.name@/dependencies/ ./
 COPY --from=builder @project.name@/spring-boot-loader/ ./
 COPY --from=builder @project.name@/snapshot-dependencies/ ./
 COPY --from=builder @project.name@/application/ ./
+COPY --from=builder @project.name@/target/*.jar app.jar
 
 ENV JAVA_OPTS=""
 ENV SPRING_PROFILES_ACTIVE=""
@@ -34,9 +45,6 @@ ENV SPRING_CLOUD_CONFIG_SERVER_GIT_PASSWORD=""
 ENV SPRING_CLOUD_CONFIG_SERVER_GIT_USERNAME=""
 ENV LOKI_HOST="loki"
 
-ENV TZ="America/Sao_Paulo"
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 EXPOSE 8888
 
-ENTRYPOINT ["java", "org.springframework.boot.loader.launch.JarLauncher" ,"--spring.profiles.active=${SPRING_PROFILES_ACTIVE}"]
-
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar --spring.profiles.active=${SPRING_PROFILES_ACTIVE}"]
