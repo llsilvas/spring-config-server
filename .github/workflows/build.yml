@@ -11,17 +11,18 @@ name: Java CI with Maven
 on:
   push:
     # "*", pode executar independente da branch
-    branches: [ "*" ]
-  pull_request:
-    branches: [ "*" ]
+    # branches: [ "*" ]
+    branches:
+      - main
+  # pull_request:
+  #   branches: [ "*" ]
 
 jobs:
-
-  tests:
+  build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        java_version: ['21']
+    # strategy:
+    #   matrix:
+    #     java_version: ['21']
 
     steps:
     - uses: actions/checkout@v4
@@ -29,32 +30,44 @@ jobs:
     - name: Set up JDK 
       uses: actions/setup-java@v4
       with:
-        java-version: ${{matrix.java_version}}
+        # java-version: ${{matrix.java_version}}
+        java-version: '17'
         distribution: 'temurin'
         cache: maven
 
-    - name: Test with Maven
-      run: mvn clean test
+    - name: Build with Maven
+      run: mvn clean package
+
+    - name: Upload JAR as artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: my-artifact
+        path: target/spring-config-server.jar
   
-  build:
-    needs: tests
+  test:
+    # needs: build
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        java_version: [ '21' ]
+    # strategy:
+    #   matrix:
+    #     java_version: [ '21' ]
 
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-    - name: Set up JDK 
-      uses: actions/setup-java@v4
+    # - name: Set up JDK 
+    #   uses: actions/setup-java@v4
+    #   with:
+    #     java-version: '17'
+    #     distribution: 'temurin'
+    #     cache: maven
+    - name: Download artifact
+      uses: actions/download-artifact@v3
       with:
-        java-version: ${{matrix.java_version}}
-        distribution: 'temurin'
-        cache: maven
+        name: my-artifact
 
-    - name: Build
-      run: mvn clean package
+    - name: Run tests
+      run: java -jar my-artifact/spring-config-server.jar --test
 
   docker:
     needs: build

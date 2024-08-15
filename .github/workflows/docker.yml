@@ -25,4 +25,19 @@ jobs:
           username: llsilvas
           password: ${{ secrets.DOCKER_HUB_PASS }}
 
+      - name: Set up JDK 
+        uses: actions/setup-java@v4
+        with:
+          # java-version: ${{matrix.java_version}}
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: my-artifact
+
+      - name: Build with Maven
+        run: mvn k8s:build -Pdocker 
+
 
