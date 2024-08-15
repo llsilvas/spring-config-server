@@ -28,8 +28,8 @@ jobs:
       - name: Set up JDK 
         uses: actions/setup-java@v4
         with:
-          # java-version: ${{matrix.java_version}}
-          java-version: '21'
+          java-version: ${{matrix.java_version}}
+#          java-version: '21'
           distribution: 'temurin'
           cache: maven
       - name: Download artifact
