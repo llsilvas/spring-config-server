@@ -66,7 +66,7 @@ jobs:
 #        name: my-artifact
 
     - name: Run tests
-      run: mvn clean test -Dspring.profiles.active=test
+      run: java -jar spring-config-server.jar --test
 
   docker:
     needs: test
