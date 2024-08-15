@@ -45,9 +45,9 @@ jobs:
   test:
     needs: build
     runs-on: ubuntu-latest
-    # strategy:
-    #   matrix:
-    #     java_version: [ '21' ]
+    strategy:
+       matrix:
+         java_version: [ '21' ]
 
     steps:
     - name: Checkout code
