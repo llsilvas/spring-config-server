@@ -38,8 +38,8 @@ USER spring:spring
 COPY --from=builder @project.name@/dependencies/ ./
 COPY --from=builder @project.name@/spring-boot-loader/ ./
 COPY --from=builder @project.name@/snapshot-dependencies/ ./
-COPY --from=builder @project.name@/application/ ./
-COPY --from=builder @project.name@/target/*.jar app.jar
+#COPY --from=builder @project.name@/application/ ./
+#COPY --from=builder @project.name@/target/*.jar app.jar
 
 ENV JAVA_OPTS=""
 ENV SPRING_PROFILES_ACTIVE=""
