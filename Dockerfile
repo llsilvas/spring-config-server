@@ -2,19 +2,22 @@ FROM eclipse-temurin:21 as builder
 # First stage : Extract the layers
 WORKDIR @project.name@
 
-COPY mvnw .
-COPY .mvn .mvn
-COPY pom.xml .
-COPY src src
-RUN chmod +x mvnw
-RUN ./mvnw package -DskipTests
+#COPY mvnw .
+#COPY .mvn .mvn
+#COPY pom.xml .
+#COPY src src
+#RUN chmod +x mvnw
+#RUN ./mvnw clean package -DskipTests
+
+WORKDIR /@project.name@
+
+ADD ./ /@project.name@
 
 ARG JAR_FILE=target/*.jar
 COPY ${JAR_FILE} app.jar
 RUN java -Djarmode=layertools -jar app.jar extract
 
-FROM eclipse-temurin:21-jammy as final
-
+FROM eclipse-temurin:21-jre-jammy as final
 # Cria o usuário e grupo spring
 RUN addgroup --system spring && adduser --system --ingroup spring spring
 
