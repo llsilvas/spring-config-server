@@ -65,7 +65,7 @@ jobs:
         name: my-artifact
 
     - name: Run tests
-      run: java -jar my-artifact/spring-config-server.jar --test
+      run: java -jar spring-config-server.jar --test
 
   docker:
     needs: test
