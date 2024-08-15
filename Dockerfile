@@ -13,7 +13,7 @@ WORKDIR /@project.name@
 
 ADD ./ /@project.name@
 
-ARG JAR_FILE=target/*.jar
+ARG JAR_FILE=*.jar
 COPY ${JAR_FILE} app.jar
 RUN java -Djarmode=layertools -jar app.jar extract
 
