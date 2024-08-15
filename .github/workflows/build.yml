@@ -24,7 +24,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    
+
     - name: Set up JDK 
       uses: actions/setup-java@v4
       with:
@@ -43,7 +43,7 @@ jobs:
         path: target/spring-config-server.jar
   
   test:
-    # needs: build
+    needs: build
     runs-on: ubuntu-latest
     # strategy:
     #   matrix:
@@ -68,7 +68,7 @@ jobs:
       run: java -jar my-artifact/spring-config-server.jar --test
 
   docker:
-    needs: build
+    needs: test
     uses: ./.github/workflows/docker.yml
     secrets: inherit
 
