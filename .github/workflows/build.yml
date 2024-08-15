@@ -60,13 +60,13 @@ jobs:
         #        java-version: '17'
         distribution: 'temurin'
         cache: maven
-    - name: Download artifact
-      uses: actions/download-artifact@v3
-      with:
-        name: my-artifact
+#    - name: Download artifact
+#      uses: actions/download-artifact@v3
+#      with:
+#        name: my-artifact
 
     - name: Run tests
-      run: java -jar spring-config-server.jar --test
+      run: mvn test
 
   docker:
     needs: test
