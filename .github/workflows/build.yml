@@ -11,9 +11,11 @@ name: Java CI with Maven
 on:
   push:
     # "*", pode executar independente da branch
-    branches: [ "*" ]
-  pull_request:
-    branches: [ "*" ]
+    # branches: [ "*" ]
+    branches:
+      - main
+  # pull_request:
+  #   branches: [ "*" ]
 
 jobs:
   build:
