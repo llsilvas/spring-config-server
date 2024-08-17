@@ -1,6 +1,6 @@
 FROM eclipse-temurin:21 as builder
 # First stage : Extract the layers
-WORKDIR @project.name@
+WORKDIR /@project.name@
 
 #COPY mvnw .
 #COPY .mvn .mvn

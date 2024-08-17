@@ -1,76 +1,73 @@
-# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven
-
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
 name: Spring Config Server Pipeline
 
 on:
   push:
     # "*", pode executar independente da branch
-    branches: [ "*" ]
-  pull_request:
-    branches: [ "*" ]
+    #    branches: [ "*" ]
+    tags: [ "*" ]
+#  pull_request:
+#    branches: [ "*" ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
-       matrix:
-         java_version: ['21']
+      matrix:
+        java_version: [ '21' ]
 
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Set up JDK 
-      uses: actions/setup-java@v4
-      with:
-         java-version: ${{matrix.java_version}}
-#        java-version: '17'
-         distribution: 'temurin'
-         cache: maven
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{matrix.java_version}}
+          #        java-version: '17'
+          distribution: 'temurin'
+          cache: maven
 
-    - name: Build with Maven
-      run: mvn clean package
+      - name: Build with Maven
+        run: mvn clean package
 
-    - name: Upload JAR as artifact
-      uses: actions/upload-artifact@v4.3.6
-      with:
-        name: my-artifact
-        path: target/spring-config-server.jar
+      - name: Upload JAR as artifact
+        uses: actions/upload-artifact@v4.3.6
+        with:
+          name: my-artifact
+          path: target/spring-config-server.jar
   
   test:
     needs: build
     runs-on: ubuntu-latest
     strategy:
-       matrix:
-         java_version: [ '21' ]
+      matrix:
+        java_version: [ '21' ]
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Set up JDK
-      uses: actions/setup-java@v4
-      with:
-        java-version: ${{matrix.java_version}}
-        #        java-version: '17'
-        distribution: 'temurin'
-        cache: maven
-#    - name: Download artifact
-#      uses: actions/download-artifact@v4
-#      with:
-#        name: my-artifact
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{matrix.java_version}}
+          #        java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+      #    - name: Download artifact
+      #      uses: actions/download-artifact@v4
+      #      with:
+      #        name: my-artifact
 
-    - name: Run tests
-      run: mvn clean test -Dspring.profiles.active=test
+      - name: Run tests
+        run: mvn clean test -Dspring.profiles.active=test
 
   docker:
     needs: test
+    name: Build and Push Docker Image
+    if: contains(github.ref, 'docker')
     uses: ./.github/workflows/docker.yml
     secrets: inherit
+    with:
+      tag_name: ${{github.ref_name}}
 
 

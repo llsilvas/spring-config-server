@@ -10,9 +10,13 @@ name: Spring Config Server Pipeline
 
 on:
   workflow_call:
+    inputs:
+      tag_name:
+        description: 'Test'
+        required: true
+        type: string
 
 jobs:
-
   docker:
     runs-on: ubuntu-latest
     strategy:
@@ -41,6 +45,7 @@ jobs:
           name: my-artifact
 
       - name: Build with Maven
+        if: contains(inputs.tag_name, 'docker' )
         run: mvn k8s:build -Pdocker 
 
 
