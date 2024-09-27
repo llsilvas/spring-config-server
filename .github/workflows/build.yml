@@ -10,6 +10,7 @@ on:
 
 jobs:
   build:
+    name: Build Maven
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -36,6 +37,7 @@ jobs:
           path: target/spring-config-server.jar
   
   test:
+    name: Tests
     needs: build
     runs-on: ubuntu-latest
     strategy:

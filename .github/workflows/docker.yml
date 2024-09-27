@@ -45,7 +45,6 @@ jobs:
           name: my-artifact
 
       - name: Build with Maven
-        if: contains(inputs.tag_name, 'docker' )
         run: mvn k8s:build -Pdocker 
 
 

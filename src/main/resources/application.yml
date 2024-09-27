@@ -1,8 +1,6 @@
 server:
   port: 8888
 spring:
-  application:
-    name: spring-config-server
   rabbitmq:
     host: ${SPRING_RABBITMQ_HOST:localhost}
   cloud:
@@ -21,6 +19,12 @@ spring:
     add-properties: true
   jackson:
     timezone: GMT-3
+  application:
+    name: spring-config-server
+
+loki:
+  url: http://${LOKI_URL:loki}:3100/loki/api/v1/push
+  jobName: ${LOKI_JOB_NAME:spring-config-server}
 
 management:
   endpoint:
@@ -30,4 +34,8 @@ management:
     web:
       exposure:
         include: '*'
+
+logging:
+  level:
+    com.github.loki4j: DEBUG
 

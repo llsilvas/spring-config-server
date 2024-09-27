@@ -1,4 +1,3 @@
-version: "4.0"
 services:
   spring-config-server:
     image: spring-config-server:latest
@@ -12,5 +11,4 @@ services:
       - labs
 networks:
   labs:
-    external:
-      name: labs
+    external: true

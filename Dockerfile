@@ -38,15 +38,15 @@ USER spring:spring
 COPY --from=builder @project.name@/dependencies/ ./
 COPY --from=builder @project.name@/spring-boot-loader/ ./
 COPY --from=builder @project.name@/snapshot-dependencies/ ./
-#COPY --from=builder @project.name@/application/ ./
-#COPY --from=builder @project.name@/target/*.jar app.jar
+COPY --from=builder @project.name@/application/ ./
+COPY --from=builder @project.name@/target/*.jar app.jar
 
 ENV JAVA_OPTS=""
 ENV SPRING_PROFILES_ACTIVE=""
 ENV SPRING_RABBITMQ_ADDRESSES=""
 ENV SPRING_CLOUD_CONFIG_SERVER_GIT_PASSWORD=""
 ENV SPRING_CLOUD_CONFIG_SERVER_GIT_USERNAME=""
-ENV LOKI_HOST="loki"
+ENV LOKI_URL="loki"
 
 EXPOSE 8888
 
