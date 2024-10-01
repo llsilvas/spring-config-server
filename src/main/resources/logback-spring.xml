@@ -1,61 +1,77 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <contextName>${project.name}</contextName>
-    <springProperty name="appName" source="spring.application.name"/>
-    <springProperty scope="context" name="LOKI_URL" source="loki.url"/>
-    <appender name="json-stdout" class="ch.qos.logback.core.ConsoleAppender">
-        <layout class="ch.qos.logback.contrib.json.classic.JsonLayout">
-            <jsonFormatter class="ch.qos.logback.contrib.jackson.JacksonJsonFormatter">
-                <prettyPrint>true</prettyPrint>
-            </jsonFormatter>
-            <timestampFormat>yyyy-MM-dd' 'HH:mm:ss.SSS</timestampFormat>
-        </layout>
-    </appender>
+
+    <springProperty name="name" source="spring.application.name"/>
+
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+            <pattern>
+                %d{HH:mm:ss.SSS} %-5level %logger{36} %X{X-Request-ID} - %msg%n
+            </pattern>
         </encoder>
     </appender>
-<!--    <appender name="LOKI" class="com.github.loki4j.logback.Loki4jAppender">-->
-<!--        <loki4j>-->
-<!--            <http url="${LOKI_URL}"/>-->
-<!--            <batch maxItems="1000" timeoutMs="10000"/>-->
-<!--            <label name="job" value="spring-config-server"/>-->
-<!--        </loki4j>-->
-<!--        <format>-->
-<!--            <label>-->
-<!--                <pattern>application=${appName},host=${HOSTNAME},level=%level,class=%logger{0}</pattern>-->
-<!--                <readMarkers>true</readMarkers>-->
-<!--            </label>-->
-<!--            <message>-->
-<!--                <pattern>-->
-<!--                    {-->
-<!--                    "level":"%level",-->
-<!--                    "class":"%logger{36}",-->
-<!--                    "thread":"%thread",-->
-<!--                    "message": "%message",-->
-<!--                    "requestId": "%X{X-Request-ID}"-->
-<!--                    }-->
-<!--                </pattern>-->
-<!--            </message>-->
-<!--        </format>-->
-<!--    </appender>-->
-    <appender name="LOKI" class="com.github.loki4j.logback.Loki4jAppender">
-        <loki4j>
-            <batch maxItems="100" maxInterval="2000"/>
-            <http url="http://${LOKI_URL:localhost}:3100/loki/api/v1/push"/>
-            <queueSize>1024</queueSize> <!-- Tamanho da fila -->
-            <maxFlushInterval>5000</maxFlushInterval> <!-- Intervalo máximo de flush -->
-            <encoder>
-                <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n</pattern>
-            </encoder>
-        </loki4j>
-    </appender>
 
-    <root level="DEBUG">
-        <appender-ref ref="LOKI"/>
-    </root>
+    <springProfile name="docker">
+        <appender name="LOKI" class="com.github.loki4j.logback.Loki4jAppender">
+            <!-- (1) -->
+            <http>
+                <url>http://loki:3100/loki/api/v1/push</url>
+            </http>
+            <format>
+                <!-- (2) -->
+                <label>
+                    <pattern>application=${name},host=${HOSTNAME},level=%level</pattern>
+                    <!-- (3) -->
+                    <readMarkers>true</readMarkers>
+                </label>
+                <message>
+                    <!-- (4) -->
+                    <!--                <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level [%thread] %logger{36} - %msg%n</pattern>-->
+                    <pattern>
+                        {
+                        "level":"%level",
+                        "class":"%logger{36}",
+                        "thread":"%thread",
+                        "message": "%msg"
+                        <!--                    "requestId": "%X{X-Request-ID}"-->
+                        }
+                    </pattern>
+                </message>
+            </format>
+        </appender>
+    </springProfile>
+
+    <springProfile name="default, local">
+        <appender name="LOKI" class="com.github.loki4j.logback.Loki4jAppender">
+            <!-- (1) -->
+            <http>
+                <url>http://localhost:3100/loki/api/v1/push</url>
+            </http>
+            <format>
+                <!-- (2) -->
+                <label>
+                    <pattern>application=${name},host=${HOSTNAME},level=%level</pattern>
+                    <!-- (3) -->
+                    <readMarkers>true</readMarkers>
+                </label>
+                <message>
+                    <!-- (4) -->
+                    <!--                <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level [%thread] %logger{36} - %msg%n</pattern>-->
+                    <pattern>
+                        {
+                        "level": "%level",
+                        "class": "%logger{36}",
+                        "thread":" %thread",
+                        "message": "%msg"
+                        <!--                    "requestId": "%X{X-Request-ID}"-->
+                        }
+                    </pattern>
+                </message>
+            </format>
+        </appender>
+    </springProfile>
     <root level="INFO">
         <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="LOKI"/>
     </root>
 </configuration>

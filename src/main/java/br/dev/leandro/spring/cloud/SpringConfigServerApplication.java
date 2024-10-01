@@ -22,8 +22,13 @@ public class SpringConfigServerApplication {
 
     public static void main(String[] args) {
         log.info(":: Iniciando Spring-Config-Server ::");
+        long startTime = System.currentTimeMillis(); // Captura o tempo de início
         SpringApplication.run(SpringConfigServerApplication.class, args);
-        log.info(":: Spring-Config-Server iniciado com sucesso ::" + new Date());
+
+        long endTime = System.currentTimeMillis(); // Captura o tempo de fim
+        long totalTime = endTime - startTime; // Calcula o tempo total em milissegundos
+        log.info(":: Spring-Config-Server iniciado com sucesso :: - " + totalTime + " ms" );
+
     }
 
 }
