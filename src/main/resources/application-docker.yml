@@ -1,0 +1,24 @@
+
+spring:
+  rabbitmq:
+    host: ${SPRING_RABBITMQ_HOST:localhost}
+    port: 5672
+    connection-timeout: 5
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/llsilvas/spring_config_repo.git
+          search-paths: /{application}
+          username: ${GIT_USERNAME}
+          password: ${GIT_PASSWORD}
+          clone-on-start: true
+          default-label: main
+
+logging:
+  level:
+    org.springframework.web: INFO
+    org.springframework.boot: INFO
+    org.springframework.cloud: INFO
+    org.springframework.cloud.config: INFO
+    com.github.loki4j.logback: INFO

@@ -5,12 +5,12 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.3.2</version>
+        <version>3.3.4</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>br.dev.leandro.spring</groupId>
     <artifactId>spring-config-server</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
     <name>spring-config-server</name>
     <description>spring-config-server</description>
     <properties>
@@ -28,7 +28,6 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-config-server</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-config-monitor</artifactId>
@@ -70,44 +69,22 @@
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-configuration-processor</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-testcontainers</artifactId>
-            <scope>test</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-starter-test</artifactId>-->
+<!--            <scope>test</scope>-->
+<!--        </dependency>-->
 
-        <!-- https://mvnrepository.com/artifact/com.github.loki4j/loki-logback-appender -->
         <dependency>
             <groupId>com.github.loki4j</groupId>
             <artifactId>loki-logback-appender</artifactId>
-            <version>1.5.0</version>
+            <version>1.4.1</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.github.loki4j</groupId>
-            <artifactId>loki-protobuf</artifactId>
-            <version>0.0.2_pb4.26.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
     <dependencyManagement>
         <dependencies>
@@ -192,7 +169,7 @@
                         <artifactId>kubernetes-maven-plugin</artifactId>
                         <version>${jkube.version}</version>
                         <configuration>
-                            <verbose>true</verbose>
+                            <verbose>false</verbose>
                             <images>
                                 <image>
                                     <alias>${project.artifactId}</alias>

@@ -1,41 +1,25 @@
 server:
   port: 8888
+
 spring:
+  application:
+    name: saog-config-server
+#  cloud:
+#    config:
+#      server:
+#        git:
+#          uri: file://home/lsilva/Dev/workspace/Leandro-Labs/spring_config_repo/
+#          search-paths: /{application}
+  profiles:
+    active: local
   rabbitmq:
     host: ${SPRING_RABBITMQ_HOST:localhost}
-  cloud:
-#    refresh:
-#      enabled: false
-    config:
-      server:
-        git:
-          uri: https://github.com/llsilvas/spring_config_repo
-          search-paths: /{application}
-          basedir: target/config-repo
-          default-label: main
-          clone-on-start: true
-          timeout: 2
-  devtools:
-    add-properties: true
-  jackson:
-    timezone: GMT-3
-  application:
-    name: spring-config-server
-
-loki:
-  url: http://${LOKI_URL:loki}:3100/loki/api/v1/push
-  jobName: ${LOKI_JOB_NAME:spring-config-server}
-
-management:
-  endpoint:
-    health:
-      enabled: true
-  endpoints:
-    web:
-      exposure:
-        include: '*'
+    port: 5672
+    connection-timeout: 5
 
 logging:
   level:
-    com.github.loki4j: DEBUG
-
+    org.springframework.web: INFO
+    org.springframework.boot: INFO
+    org.springframework.cloud: DEBUG
+    org.springframework.cloud.config: DEBUG
