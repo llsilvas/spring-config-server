@@ -23,6 +23,7 @@ spring:
     port: 5672
     connection-timeout: 5
 
+
 logging:
   level:
     org.springframework.web: INFO
@@ -30,3 +31,35 @@ logging:
     org.springframework.cloud: INFO
     org.springframework.cloud.config: INFO
     com.github.loki4j.logback: INFO
+
+management:
+  info:
+    build:
+      enabled: true
+    git:
+      enabled: true
+    java:
+      enabled: true
+  endpoint:
+    health:
+      probes:
+        enabled: true
+      rabbit:
+        enabled: true
+      show-details: always
+    env:
+      post:
+        enabled: true
+    prometheus:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+      base-path: /infra/config/actuator
+  metrics:
+    jvm: true
+  prometheus:
+    metrics:
+      export:
+        enabled: true
