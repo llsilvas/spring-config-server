@@ -3,6 +3,19 @@ server:
 spring:
   application:
     name: spring-config-server
+
+  cloud:
+    config:
+      server:
+        git:
+          default-label: main
+          uri: https://github.com/llsilvas/spring_config_repo.git
+          search-paths: /{application}
+          clone-on-start: true
+          force-pull: true
+    bus:
+      enabled: true
+
   rabbitmq:
     host: ${SPRING_RABBITMQ_HOST:localhost}
     port: 5672
