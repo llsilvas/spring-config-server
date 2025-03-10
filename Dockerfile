@@ -1,5 +1,5 @@
 # Stage 1: Build stage
-FROM maven:3.9.5-eclipse-temurin-21 as builder
+FROM llsilvas/java21-maven-otel:latest as builder
 WORKDIR /app
 
 # Copia o pom.xml e baixa as dependências
@@ -21,6 +21,7 @@ WORKDIR /app
 
 # Copia o JAR da aplicação
 COPY --from=builder app/target/*.jar app.jar
+COPY --from=builder /opt/opentelemetry-javaagent.jar /app/opentelemetry-javaagent.jar
 
 # Copia as camadas extraídas
 COPY --from=builder /app/@project.name@/dependencies/ ./
@@ -41,4 +42,5 @@ ENV SPRING_RABBITMQ_HOST=""
 EXPOSE 8888
 
 # Inicia a aplicação com o launcher do Spring Boot
-ENTRYPOINT ["java", "-jar", "app.jar", "--spring.profiles.active=${SPRING_PROFILES_ACTIVE}"]
+
+ENTRYPOINT ["java", "-javaagent:/app/opentelemetry-javaagent.jar","-jar", "app.jar", "--spring.profiles.active=${SPRING_PROFILES_ACTIVE}"]

@@ -18,6 +18,11 @@ services:
       - GIT_USERNAME=${GIT_USERNAME}
       - GIT_PASSWORD=${GIT_PASSWORD}
       - LOKI_URL="loki"
+      - OTEL_SERVICE_NAME=spring-config-server
+      - OTEL_TRACES_EXPORTER=otlp
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4318
+      - OTEL_LOGS_EXPORTER=none
+      - OTEL_METRICS_EXPORTER=none  # Desativa o envio de métricas
     networks:
       - labs
 networks:
