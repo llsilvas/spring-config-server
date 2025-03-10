@@ -28,6 +28,10 @@ spring:
           jwk-set-uri: http://${KEYCLOAK_URL:localhost:8090}/realms/myrealm/protocol/openid-connect/certs
 
 management:
+  tracing:
+    sampling:
+      probability: 1.0  # 100% das requisições serão rastreadas
+
   info:
     build:
       enabled: true
@@ -59,7 +63,12 @@ management:
         enabled: true
 
 logging:
+  pattern:
+    correlation: '%X{traceId:-} %X{spanId:-}'
+    level: '%-5level [${spring.application.name}]'
+  include-application-name: true
   level:
+    root: INFO
     org.springframework.web: INFO
     org.springframework.boot: INFO
     org.springframework.cloud: INFO
